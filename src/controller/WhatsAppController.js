@@ -257,6 +257,44 @@ class WhatsAppController {
             console.log('Finished recording');
             this.closeRecordMicrophone();
         });
+
+        // Captura a mensagem escrita pelo usuário
+        this.el.inputText.on('keyup', event => {
+            if(this.el.inputText.innerHTML.length) {
+                this.el.inputPlaceholder.hide();
+                this.el.btnSendMicrophone.hide();
+                this.el.btnSend.show();
+            } else {
+                this.el.inputPlaceholder.show();
+                this.el.btnSendMicrophone.show();
+                this.el.btnSend.hide();
+            }
+        });
+
+        // Trata o envio da mensagem pela telca Enter
+        this.el.inputText.on('keypress', event => {
+            if(event.key === 'Enter' && !event.ctrlKey) {
+                event.preventDefault();
+                this.el.btnSend.click();
+            }
+        });
+
+        // Trata o envio da mensagem
+        this.el.btnSend.on('click', event => {
+            console.log(this.el.inputText.innerHTML);
+        });
+
+        // Mostra/Esconde a lista de emojis
+        this.el.btnEmojis.on('click', event => {
+            this.el.panelEmojis.toggleClass('open');
+        });
+
+        // Cria os eventos de click em cada emoji
+        this.el.panelEmojis.querySelectorAll('.emojik').forEach(emoji => {
+            emoji.on('click', event => {
+                console.log(emoji.dataset.unicode);
+            });
+        })
         
     }
 

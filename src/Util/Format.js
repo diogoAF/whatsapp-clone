@@ -14,7 +14,7 @@ class Format {
     }
 
     /*
-    * Formato @duration no padrão 0:00:00
+    * Formato @duration (em milisegundos) no padrão 0:00:00
     */
     static toTime(duration) {
         let seconds = parseInt((duration / 1000) % 60);
