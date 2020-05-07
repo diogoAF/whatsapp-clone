@@ -175,22 +175,68 @@ class WhatsAppController {
 
         // Anexar Foto
         this.el.btnAttachPhoto.on('click', event => {
-            console.log('photo');
+            this.el.inputPhoto.click();
         });
 
         // Anexar Câmera
         this.el.btnAttachCamera.on('click', event => {
-            console.log('camera');
+            this.closeAllMainPanels();
+            this.el.panelCamera.addClass('open');
+            this.el.panelCamera.css({
+                height: 'calc(100% - 120px)'
+            });
         });
 
         // Anexar Documento
         this.el.btnAttachDocument.on('click', event => {
-            console.log('document');
+            this.closeAllMainPanels();
+            this.el.panelDocumentPreview.addClass('open');
+            this.el.panelDocumentPreview.css({
+                height: 'calc(100% - 120px)'
+            });
         });
 
         // Anexar Contato
         this.el.btnAttachContact.on('click', event => {
-            console.log('contact');
+            this.el.modalContacts.show();
+        });
+
+        // Carrega todos os arquivos selecionados pelo usuário
+        this.el.inputPhoto.on('change', event => {
+            console.log(this.el.inputPhoto.files);
+            // Spread para converter a collection en array
+            let files = [...this.el.inputPhoto.files];
+
+            files.forEach(file => {
+                console.log(file);
+            });
+        });
+
+        // Fecha o Panel da Câmera
+        this.el.btnClosePanelCamera.on('click', event => {
+            this.closeAllMainPanels();
+            this.el.panelMessagesContainer.show();
+        });
+
+        // Tirar foto pela WebCam
+        this.el.btnTakePicture.on('click', event => {
+            console.log('take picture');
+        });
+
+        // Fecha o Panel de Preview de Documento
+        this.el.btnClosePanelDocumentPreview.on('click', event => {
+            this.closeAllMainPanels();
+            this.el.panelMessagesContainer.show();
+        });
+
+        // Envia documento para o chat
+        this.el.btnSendDocument.on('click', event => {
+            console.log('Document sent');
+        });
+
+        // Fecha a modal de anexar contato
+        this.el.btnCloseModalContacts.on('click', event => {
+            this.el.modalContacts.hide();
         });
         
     }
@@ -205,11 +251,20 @@ class WhatsAppController {
     }
 
     /*
-    * Escone todos os panels.
+    * Escone todos os panels da esquerda.
     */
     closeAllLeftPanels() {
         this.el.panelEditProfile.hide();
         this.el.panelAddContact.hide();
+    }
+
+    /*
+    * Escone todos os panels da área principal.
+    */
+    closeAllMainPanels() {
+        this.el.panelMessagesContainer.hide();
+        this.el.panelCamera.removeClass('open');
+        this.el.panelDocumentPreview.removeClass('open');
     }
 
 }
