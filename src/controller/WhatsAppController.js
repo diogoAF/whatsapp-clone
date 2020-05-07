@@ -101,6 +101,7 @@ class WhatsAppController {
     * Adiciona listeners para diversos elementos.
     */
     initEvents() {
+
         // Abrir panel de edição de perfil
         this.el.myPhoto.on('click', event => {
             this.closeAllLeftPanels();
@@ -238,7 +239,46 @@ class WhatsAppController {
         this.el.btnCloseModalContacts.on('click', event => {
             this.el.modalContacts.hide();
         });
+
+        // Iniciar gravação de audio
+        this.el.btnSendMicrophone.on('click', event => {
+            this.el.recordMicrophone.show();
+            this.el.btnSendMicrophone.hide();
+            this.startRecordMicrophoneTimer();
+        });
+
+        // Cancelar a gravação de audio
+        this.el.btnCancelMicrophone.on('click', event => {
+            this.closeRecordMicrophone();
+        });
+
+        // Finalizar a gravação de audio
+        this.el.btnFinishMicrophone.on('click', event => {
+            console.log('Finished recording');
+            this.closeRecordMicrophone();
+        });
         
+    }
+
+    /*
+    * Inicia a contabilizar a duração do audio gravado.
+    */
+    startRecordMicrophoneTimer() {
+        let start = Date.now();
+        
+        this._recordMicrophoneTimer = setInterval(() => {
+            this.el.recordMicrophoneTimer.innerHTML = Date.now() - start;
+        }, 1000);
+
+    }
+
+    /*
+    * Fecha todos os elementos referentes a gravação de audio.
+    */
+    closeRecordMicrophone() {
+        this.el.recordMicrophone.hide();
+        this.el.btnSendMicrophone.show();
+        clearInterval(this._recordMicrophoneTimer);
     }
 
     /*
