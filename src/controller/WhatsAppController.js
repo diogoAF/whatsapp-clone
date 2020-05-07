@@ -155,7 +155,53 @@ class WhatsAppController {
 
             this.getForm();
         });
+
+        // Clique em qualquer contato da listagem de contatos
+        this.el.contactsMessagesList.querySelectorAll('.contact-item').forEach(item => {
+            item.on('click', event => {
+                this.el.home.hide();
+                this.el.main.css({
+                    display: 'flex'
+                });
+            });
+        });
+
+        // Botão de inserir anexos
+        this.el.btnAttach.on('click', event => {
+            event.stopPropagation();
+            this.el.menuAttach.addClass('open');
+            document.addEventListener('click', this.closeMenuAttach.bind(this));
+        });
+
+        // Anexar Foto
+        this.el.btnAttachPhoto.on('click', event => {
+            console.log('photo');
+        });
+
+        // Anexar Câmera
+        this.el.btnAttachCamera.on('click', event => {
+            console.log('camera');
+        });
+
+        // Anexar Documento
+        this.el.btnAttachDocument.on('click', event => {
+            console.log('document');
+        });
+
+        // Anexar Contato
+        this.el.btnAttachContact.on('click', event => {
+            console.log('contact');
+        });
         
+    }
+
+    /*
+    * Esconte os botões de anexo se o usuário clicar em qualquer local do
+    * documento.
+    */
+    closeMenuAttach() {
+        document.removeEventListener('click', this.removeAttach);
+        this.el.menuAttach.removeClass('open');
     }
 
     /*
