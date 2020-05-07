@@ -267,7 +267,7 @@ class WhatsAppController {
         let start = Date.now();
         
         this._recordMicrophoneTimer = setInterval(() => {
-            this.el.recordMicrophoneTimer.innerHTML = Date.now() - start;
+            this.el.recordMicrophoneTimer.innerHTML = Format.toTime(Date.now() - start);
         }, 1000);
 
     }
@@ -279,6 +279,7 @@ class WhatsAppController {
         this.el.recordMicrophone.hide();
         this.el.btnSendMicrophone.show();
         clearInterval(this._recordMicrophoneTimer);
+        this.el.recordMicrophoneTimer.innerHTML = '00:00'
     }
 
     /*
