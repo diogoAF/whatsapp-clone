@@ -78,6 +78,22 @@ class WhatsAppController {
             return this.classList.contains(name);
         }
 
+        // Retorna um FormData para os elementos HTMLFormElement
+        HTMLFormElement.prototype.getForm = function() {
+            return new FormData(this);
+        }
+
+        // Converte os campos de um formullario em JSON
+        HTMLFormElement.prototype.tojSON = function() {
+            let json = {};
+
+            this.getForm().forEach((value, key) => {
+                json[key] = value;
+            });
+
+            return json;
+        }
+
     }
 
 
@@ -113,7 +129,32 @@ class WhatsAppController {
         // Fechar panel de novo contato
         this.el.btnClosePanelAddContact.on('click', event => {
             this.el.panelAddContact.removeClass('open');
-        })
+        });
+
+        // Enviar uma foto para o perfil
+        this.el.photoContainerEditProfile.on('click', event => {
+            this.el.inputProfilePhoto.click();
+        });
+
+        // Editando o nome do perfil
+        this.el.inputNamePanelEditProfile.on('keypress', event => {
+            if(event.key === 'Enter') {
+                event.preventDefault();
+                this.el.btnSavePanelEditProfile.click();
+            }
+        });
+
+        // Campo para editar nome do perfil
+        this.el.btnSavePanelEditProfile.on('click', event => {
+            console.log(this.el.inputNamePanelEditProfile.innerHTML);
+        });
+
+        // Formulario para adicionar novo contato
+        this.el.formPanelAddContact.on('submit', event => {
+            event.preventDefault();
+
+            this.getForm();
+        });
         
     }
 
