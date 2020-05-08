@@ -228,8 +228,30 @@ export default class WhatsAppController {
 
         // Tirar foto pela WebCam
         this.el.btnTakePicture.on('click', event => {
-            console.log('take picture');
+            // Efetivamente tira a foto
+            let dataUrl = this._camera.takePicture();
+            this.el.pictureCamera.src = dataUrl;
+            // Eventos
+            this.el.pictureCamera.show();
+            this.el.videoCamera.hide();
+            this.el.btnReshootPanelCamera.show();
+            this.el.containerTakePicture.hide();
+            this.el.containerSendPicture.show();
         });
+
+        // Tirar outra foto pela Webcam
+        this.el.btnReshootPanelCamera.on('click', event => {
+            this.el.pictureCamera.hide();
+            this.el.videoCamera.show();
+            this.el.btnReshootPanelCamera.hide();
+            this.el.containerTakePicture.show();
+            this.el.containerSendPicture.hide();
+        });
+
+        // Enviar a foto tirada pela WebCam
+        this.el.btnSendPicture.on('click', event => {
+            console.log('Picture sent', this.el.pictureCamera.src);
+        })
 
         // Fecha o Panel de Preview de Documento
         this.el.btnClosePanelDocumentPreview.on('click', event => {
