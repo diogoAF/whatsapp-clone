@@ -1,4 +1,4 @@
-class Format {
+export default class Format {
 
     /*
     * Cria uma DIV temporaria para utilizar o dataset dela
