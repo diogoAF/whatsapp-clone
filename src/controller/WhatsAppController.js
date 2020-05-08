@@ -9,7 +9,7 @@ export default class WhatsAppController {
         this.initEvents();
     }
 
-    /*
+    /**
     * Carrega todos os elementos com id para o atributo this.el
     */
     loadElements(){
@@ -19,7 +19,7 @@ export default class WhatsAppController {
         });
     }
 
-    /*
+    /**
     * Cria prototypes úteis para todos os Element do document.
     */
     elementsPrototype() {
@@ -100,7 +100,7 @@ export default class WhatsAppController {
     }
 
 
-    /*
+    /**
     * Adiciona listeners para diversos elementos.
     */
     initEvents() {
@@ -223,6 +223,7 @@ export default class WhatsAppController {
         this.el.btnClosePanelCamera.on('click', event => {
             this.closeAllMainPanels();
             this.el.panelMessagesContainer.show();
+            this._camera.stop();
         });
 
         // Tirar foto pela WebCam
@@ -338,7 +339,7 @@ export default class WhatsAppController {
         
     }
 
-    /*
+    /**
     * Inicia a contabilizar a duração do audio gravado.
     */
     startRecordMicrophoneTimer() {
@@ -350,7 +351,7 @@ export default class WhatsAppController {
 
     }
 
-    /*
+    /**
     * Fecha todos os elementos referentes a gravação de audio.
     */
     closeRecordMicrophone() {
@@ -360,7 +361,7 @@ export default class WhatsAppController {
         this.el.recordMicrophoneTimer.innerHTML = '00:00'
     }
 
-    /*
+    /**
     * Esconte os botões de anexo se o usuário clicar em qualquer local do
     * documento.
     */
@@ -369,7 +370,7 @@ export default class WhatsAppController {
         this.el.menuAttach.removeClass('open');
     }
 
-    /*
+    /**
     * Escone todos os panels da esquerda.
     */
     closeAllLeftPanels() {
@@ -377,7 +378,7 @@ export default class WhatsAppController {
         this.el.panelAddContact.hide();
     }
 
-    /*
+    /**
     * Escone todos os panels da área principal.
     */
     closeAllMainPanels() {

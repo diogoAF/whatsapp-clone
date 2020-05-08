@@ -7,11 +7,21 @@ export default class CameraController {
             video: true
         }).then(stream => {
 
+            this._stream = stream;
             this._videoEl.srcObject = stream;
             this._videoEl.play();
 
         }).catch(err => {
             console.error(err);
+        });
+    }
+
+    /**
+     * Para todos os tracks ativos do Stream
+     */
+    stop() {
+        this._stream.getTracks().forEach(track => {
+            track.stop();
         });
     }
 }

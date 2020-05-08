@@ -1,6 +1,6 @@
 export default class Format {
 
-    /*
+    /**
     * Cria uma DIV temporaria para utilizar o dataset dela
     * para converter o parametro @text para o formato camelCase
     * que o dataset gera automaticamente. 
@@ -13,7 +13,7 @@ export default class Format {
         return Object.keys(div.firstChild.dataset)[0];
     }
 
-    /*
+    /**
     * Formato @duration (em milisegundos) no padrão 0:00:00
     */
     static toTime(duration) {
