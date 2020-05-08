@@ -186,6 +186,9 @@ class WhatsAppController {
             this.el.panelCamera.css({
                 height: 'calc(100% - 120px)'
             });
+
+            // Cria o controlodar da camera passando o elemento onde o video deve ser transmitido
+            this._camera = new CameraController(this.el.videoCamera);
         });
 
         // Anexar Documento
