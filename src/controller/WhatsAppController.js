@@ -293,17 +293,39 @@ class WhatsAppController {
         this.el.panelEmojis.querySelectorAll('.emojik').forEach(emoji => {
             emoji.on('click', event => {
 
+                // Clona o elemento HTML para inserir o emoji
                 let clone = this.el.imgEmojiDefault.cloneNode();
                 
+                // Insere os dados do emoji no clone
                 clone.style.cssText = emoji.style.cssText;
                 clone.dataset.unicode = emoji.dataset.unicode;
                 clone.alt = emoji.dataset.unicode;
-
                 emoji.classList.forEach( name => {
                     clone.addClass(name);
                 });
 
-                this.el.inputText.appendChild(clone);
+                // Pega onde o cursor do mouse está focado
+                let cursor = window.getSelection();
+                // Se o mouse não estiver focado no inputText, faz ele ficar
+                if(!cursor.focusNode || cursor.focusNode.id != this.el.inputText.id){
+                    this.el.inputText.focus();
+                    cursor = window.getSelection();
+                }
+
+                // Pega o range do cursor, útil caso o usuário tela selecionado parte do texto
+                // e apaga o contudo da seleção
+                let range = cursor.getRangeAt(0);
+                range.deleteContents();
+
+                // Cria um fragmento e insere nele o clone personalizado do emoji 
+                let frag = document.createDocumentFragment();
+                frag.appendChild(clone);
+
+                // Insere o fragmento no range e coloca o cursor do mouse logo após o fragmento
+                range.insertNode(frag);
+                range.setStartAfter(clone);
+
+                // Dispara o evento de keyup no inputText
                 this.el.inputText.dispatchEvent(new Event('keyup'));
             });
         });
