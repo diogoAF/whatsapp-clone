@@ -292,9 +292,21 @@ class WhatsAppController {
         // Cria os eventos de click em cada emoji
         this.el.panelEmojis.querySelectorAll('.emojik').forEach(emoji => {
             emoji.on('click', event => {
-                console.log(emoji.dataset.unicode);
+
+                let clone = this.el.imgEmojiDefault.cloneNode();
+                
+                clone.style.cssText = emoji.style.cssText;
+                clone.dataset.unicode = emoji.dataset.unicode;
+                clone.alt = emoji.dataset.unicode;
+
+                emoji.classList.forEach( name => {
+                    clone.addClass(name);
+                });
+
+                this.el.inputText.appendChild(clone);
+                this.el.inputText.dispatchEvent(new Event('keyup'));
             });
-        })
+        });
         
     }
 
