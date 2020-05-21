@@ -325,6 +325,10 @@ export default class WhatsAppController {
             this.startRecordMicrophoneTimer();
 
             this._microphoneController = new MicrophoneController(this.el.audioMicrophone);
+
+            this._microphoneController.on('play', audio => {
+                console.log('recebi o evento play', audio);
+            });
         });
 
         // Cancelar a gravação de audio
