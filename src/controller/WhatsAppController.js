@@ -1,5 +1,6 @@
 import Format from './../util/Format';
 import CameraController from './CameraController';
+import DocumentPreviewController from './DocumentPreviewController';
 
 export default class WhatsAppController {
 
@@ -201,11 +202,58 @@ export default class WhatsAppController {
             this.el.panelDocumentPreview.css({
                 height: 'calc(100% - 120px)'
             });
+            this.el.inputDocument.click();
         });
 
         // Anexar Contato
         this.el.btnAttachContact.on('click', event => {
             this.el.modalContacts.show();
+        });
+
+        // Trata o envio de documentos
+        this.el.inputDocument.on('change', event => {
+            if(this.el.inputDocument.files){
+
+                // Retorna o panelDocumentPreview para ter a altura padrão
+                this.el.panelDocumentPreview.css({
+                    height: '100%'
+                });
+
+                // Atualmente o usuário só pode enviar um arquivo por vez
+                let file = this.el.inputDocument.files[0];
+                this._documentPreviewController = new DocumentPreviewController(file);
+                
+                // Recebe a imagem de preview
+                this._documentPreviewController.getPreviewData().then(result => {
+                    this.el.imgPanelDocumentPreview.src = result.src;
+                    this.el.infoPanelDocumentPreview.innerHTML = result.info;
+                    this.el.imagePanelDocumentPreview.show();
+                    this.el.filePanelDocumentPreview.hide();
+
+                }).catch(err => {
+                    // Trata tipos que não são reconhecidos pelo JS
+                    switch(file.type) {
+                        case 'application/vnd.ms-excel':
+                        case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                            this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-xls';
+                            break;
+                        case 'application/vnd.ms-powerpoint':
+                        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                            this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-ppt';
+                            break;
+                        case 'application/msword':
+                        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                            this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-doc';
+                            break;
+                        default:
+                            this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-generic';
+                    }
+
+                    this.el.filenamePanelDocumentPreview.innerHTML = file.name;
+                    this.el.imagePanelDocumentPreview.hide();
+                    this.el.filePanelDocumentPreview.show();
+                });
+            }
         });
 
         // Carrega todos os arquivos selecionados pelo usuário
