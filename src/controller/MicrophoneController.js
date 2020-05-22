@@ -5,6 +5,8 @@ export default class MicrophoneController extends ClassEvent {
         super();
 
         this._audioMicrophoneEl = audioMicrophone;
+        this._isAvailable = false;
+        this._mimeType = 'audio/webm';
 
         // Pede a permissão para acessar o microfone
         navigator.mediaDevices.getUserMedia({
@@ -14,10 +16,10 @@ export default class MicrophoneController extends ClassEvent {
             this._stream = stream;
             this._audioMicrophoneEl.srcObject = this._stream;
 
-            this._audioMicrophoneEl.play();
+            this._isAvailable = true;
 
-            // Ativa o evento de play
-            this.trigger('play', this._audioMicrophoneEl);
+            // Ativa o evento de ready
+            this.trigger('ready', this._stream);
 
         }).catch(err => {
             console.error(err);
@@ -32,5 +34,55 @@ export default class MicrophoneController extends ClassEvent {
         this._stream.getTracks().forEach(track => {
             track.stop();
         });
+
+        this._isAvailable = false;
+    }
+
+    /**
+     * Inicia a gravação do audio
+     */
+    startRecorder() {
+
+        if(this._isAvailable) {
+            // Cria um MediaRecorder para capturar o stream de audio
+            this._mediaRecorder = new MediaRecorder(this._stream, {
+                mimeType: this._mimeType
+            });
+
+            // Buffer dos bytes capturados
+            this._recordedChunks = [];
+
+            // Listener para colocar os pedaços de dados no Buffer
+            this._mediaRecorder.addEventListener('dataavailable', event => {
+                if(event.data.size > 0) this._recordedChunks.push(event.data);
+            });
+
+            // Listener para converter o Buffer num arquivo definitivo
+            this._mediaRecorder.addEventListener('stop', event => {
+                // Converte o array do Buffer em um Blob
+                let bytes = new Blob(this._recordedChunks, {type: this._mimeType});
+                let filename = `rec_${Date.now()}`;
+
+                // Converte o Blob gerado em um arquivo real
+                let file = new File([bytes], filename, {
+                    type: this._mimeType,
+                    lastModified: Date.now(),
+                });
+
+            });
+
+            // Efetivamente inicia a gravação
+            this._mediaRecorder.start();
+        }
+    }
+
+    /**
+     * Para a captura do microfone e a gravação do audio
+     */
+    stopRecorder() {
+        if(this._isAvailable) {
+            this._mediaRecorder.stop();
+            this.stop();
+        }
     }
 }
