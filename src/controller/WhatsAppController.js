@@ -7,11 +7,31 @@ import Firebase from './../util/Firebase';
 export default class WhatsAppController {
 
     constructor() {
+
+        this._firebase = new Firebase();
+
         this.elementsPrototype();
         this.loadElements();
         this.initEvents();
+        this.initAuth();
+    }
 
-        this._firebase = new Firebase();
+    /**
+    * Inicia a autenticação do sistema
+    */
+    initAuth() {
+        this.el.appContent.css({display: 'none'});
+
+        this._firebase.initAuth().then(response => {
+            console.log('initAuth', response);
+            this._user = response.user;
+            this._token = response.token;
+
+            this.el.appContent.css({display: 'flex'});
+
+        }).catch(error => {
+            console.error(error);
+        });
     }
 
     /**
