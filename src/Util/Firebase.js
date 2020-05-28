@@ -8,7 +8,7 @@ import {firebaseConfig} from '../../firebase-config';
 export default class Firebase {
 
     constructor() {
-        this._initialized = false
+        window._firebaseInitialized = false
         this.init();
     }
 
@@ -20,7 +20,7 @@ export default class Firebase {
             // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
             firebase.analytics();
-            this._initialized = true;
+            window._firebaseInitialized = true;
         }
         
     }
@@ -29,20 +29,20 @@ export default class Firebase {
     * Verifica se o App do Firebase já foi inicializado. 
     */
     isInitialized() {
-        return this._initialized;
+        return window._firebaseInitialized;
     }
 
     /**
     * Retonar a referência do Firestore
     */
-    db() {
+    static db() {
         return firebase.firestore();
     }
 
     /**
     * Retornar a referência do Storage
     */
-    storage() {
+    static storage() {
         return firebase.storage();
     }
 
