@@ -25,24 +25,44 @@ export default class WhatsAppController {
 
         this._firebase.initAuth().then(response => {
 
-            this._user = new User();
-            this._token = response.token;
+            this._user = new User(response.user.email);
 
-            let userRef = User.findByEmail(response.user.email);
+            // Listener para o evento datachange
+            this._user.on('datachange', data => {
 
-            userRef.set({
-                name: response.user.displayName,
-                email: response.user.email,
-                photo: response.user.photoURL,
-            }).then(() => {
-                this.el.appContent.css({display: 'flex'});
-            }).catch(error => {
-                console.error(error);
+                document.querySelector('title').innerHTML = data.name + ' - ' + document.querySelector('title').innerHTML;
+
+                this.el.inputNamePanelEditProfile.innerHTML = data.name;
+
+                if(data.photo) {
+                    let photoLG = this.el.imgPanelEditProfile;
+                    photoLG.src = data.photo;
+                    photoLG.show();
+                    this.el.imgDefaultPanelEditProfile.hide();
+
+                    let photoSM = this.el.myPhoto.querySelector('img');
+                    photoSM.src = data.photo;
+                    photoSM.show();
+                }
+                
             });
 
+            // Coleta os dados recebidos pela Autenticação
+            this._user.name = response.user.displayName;
+            this._user.email = response.user.email;
+            this._user.photo = response.user.photoURL;
+
+            // Salva no banco os novos dados
+            this._user.save().then(() => {
+
+                this.el.appContent.css({display: 'flex'});
+
+            }).catch(error => {
+                console.error('Save', error);
+            });
 
         }).catch(error => {
-            console.error(error);
+            console.error('Auth', error);
         });
     }
 
