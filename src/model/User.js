@@ -17,6 +17,14 @@ export default class User extends Model {
     }
 
     /**
+    * Retorna a referência da colllection 'contacts' do usuário refente ao @email
+    */
+    static getContactsRef(email) {
+        return User.findByEmail(email)
+        .collection('contacts');
+    }
+
+    /**
     * Retorna a referência do usuário identificado pelo @email informado.
     */
     static findByEmail(email) {
@@ -48,10 +56,32 @@ export default class User extends Model {
     * dentro do document do usuário ativo
     */
     addContact(contact) {
-        return User.findByEmail(this.email)
-            .collection('contacts')
+        return User.getContactsRef(this.email)
             .doc(btoa(contact.email))
             .set(contact.toJSON());
+    }
+
+    /**
+    * Retorna todos os contatos do usuário
+    */
+    getContacts() {
+        return new Promise((resolve, reject) => {
+            User.getContactsRef(this.email).onSnapshot(docs => {
+                let contacts = [];
+
+                docs.forEach(doc => {
+                    let data = doc.data();
+
+                    data.id = doc.id;
+
+                    contacts.push(data);
+                });
+
+                this.trigger('contactschange', contacts);
+
+                resolve(contacts);
+            });
+        });
     }
 
     /************************************************************
