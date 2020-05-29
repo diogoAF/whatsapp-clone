@@ -43,6 +43,17 @@ export default class User extends Model {
         return User.findByEmail(this.email).set(this.toJSON());
     }
 
+    /**
+    * Salva no Firebase os dados do novo contato @contact
+    * dentro do document do usuário ativo
+    */
+    addContact(contact) {
+        return User.findByEmail(this.email)
+            .collection('contacts')
+            .doc(btoa(contact.email))
+            .set(contact.toJSON());
+    }
+
     /************************************************************
     ************************** GETTERS
     *************************************************************/  

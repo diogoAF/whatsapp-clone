@@ -210,7 +210,7 @@ export default class WhatsAppController {
             this.el.btnSavePanelEditProfile.disabled = true;
 
             this._user.name = this.el.inputNamePanelEditProfile.innerHTML;
-            
+
             this._user.save().then(() => {
                 this.el.btnSavePanelEditProfile.disabled = false;
             }).catch(error => {
@@ -222,7 +222,26 @@ export default class WhatsAppController {
         this.el.formPanelAddContact.on('submit', event => {
             event.preventDefault();
 
-            this.getForm();
+            // Utiliza o prototype getForm()
+            let form = this.el.formPanelAddContact.getForm();
+
+            let contact = new User(form.get('email'));
+
+            contact.on('datachange', data => {
+
+                if (data.name) {
+                    // Caso o usuário foi encontrado no banco, salva
+                    this._user.addContact(contact).then(() => {
+                        console.log('Contado adicionado!');
+                        this.el.btnClosePanelAddContact.click();
+                    }).catch(error => {
+                        console.error('addContact', error);
+                    });
+                } else {
+                    console.error('Usuário não encontrado');
+                }
+
+            });
         });
 
         // Clique em qualquer contato da listagem de contatos
