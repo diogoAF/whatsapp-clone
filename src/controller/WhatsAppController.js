@@ -136,6 +136,23 @@ export default class WhatsAppController {
                     img.show();
                 }
 
+                // Eventos de clique no contato
+                div.on('click' , event => {
+                    this.el.activeName.innerHTML = contact.name;
+                    this.el.activeStatus.innerHTML = contact.status;
+
+                    if(contact.photo) {
+                        this.el.activePhoto.src = contact.photo;
+                        this.el.activePhoto.show();
+                    }
+
+                    this.el.home.hide();
+                    this.el.main.css({
+                        display: 'flex'
+                    });
+                    
+                });
+
                 this.el.contactsMessagesList.appendChild(div);
             });
 
