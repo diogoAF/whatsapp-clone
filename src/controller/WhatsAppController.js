@@ -4,6 +4,7 @@ import MicrophoneController from './MicrophoneController';
 import DocumentPreviewController from './DocumentPreviewController';
 import Firebase from './../util/Firebase';
 import User from './../model/User';
+import Chat from '../model/Chat';
 
 export default class WhatsAppController {
 
@@ -325,14 +326,25 @@ export default class WhatsAppController {
 
             contact.on('datachange', data => {
 
+                // Caso o usuário foi encontrado no banco, salva
                 if (data.name) {
-                    // Caso o usuário foi encontrado no banco, salva
-                    this._user.addContact(contact).then(() => {
-                        console.log('Contado adicionado!');
-                        this.el.btnClosePanelAddContact.click();
-                    }).catch(error => {
-                        console.error('addContact', error);
+                    Chat.createIfNotExists(this._user.email, contact.email).then(chat => {
+                        //Salva o ID do chat nos dois usuários
+                        contact.chatId = chat.id;
+                        this._user.chatId = chat.id;
+
+                        //Adiciona o user na listagem de contatos também
+                        contact.addContact(this._user).then();
+
+                        //Adiciona o novo contato
+                        this._user.addContact(contact).then(() => {
+                            console.log('Contado adicionado!');
+                            this.el.btnClosePanelAddContact.click();
+                        }).catch(error => {
+                            console.error('addContact', error);
+                        });
                     });
+                    
                 } else {
                     console.error('Usuário não encontrado');
                 }

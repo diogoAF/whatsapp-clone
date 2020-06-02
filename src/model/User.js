@@ -100,6 +100,10 @@ export default class User extends Model {
         return this._data.photo;
     }
 
+    get chatId() {
+        return this._data.chatId;
+    }
+
     /************************************************************
     ************************** SETTERS
     *************************************************************/  
@@ -114,5 +118,9 @@ export default class User extends Model {
 
     set photo(value) {
         this._data.photo = value;
+    }
+
+    set chatId(value) {
+        this._data.chatId = value;
     }
 }
